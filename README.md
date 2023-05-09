@@ -49,10 +49,20 @@ https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json
 ## 依存ライブラリ
 <table>
 <tr><td>Adafruit TinyUSB  </td><td>Seeed nRF52 Boards に付属</td></tr>
-<tr><td>Adafruit_LittleFS </td><td>Seeed nRF52 Boards に付属</td></tr>
+<tr><td>Adafruit LittleFS </td><td>Seeed nRF52 Boards に付属</td></tr>
 <tr><td>InternalFileSystem</td><td>Seeed nRF52 Boards に付属</td></tr>
-<tr><td>Bluefruit         </td><td>Seeed nRF52 Boards に付属</td></tr>
+<tr><td>Adafruit Bluefruit</td><td>Seeed nRF52 Boards に付属</td></tr>
+<tr><td><a href = "https://github.com/algyan/xiaogyan_arduino">xiaogyan_arduino</a>  </td><td>XIAOGYANサポートライブラリ ※1</td></tr>
+<tr><td>Arduino Eigen</td><td>xiaogyan_arduinoが依存 ※2</td></tr>
+<tr><td>Adafruit GFX</td><td>xiaogyan_arduinoが依存</td></tr>
+<tr><td>Adafruit BusIO</td><td>Adafruit GFXが依存</td></tr>
 </table>
+
+### Seeed XIAO nRF52840 環境でのビルドエラーについて
+
+※1 Speaker.cpp, Speaker2.cpp のエラーの行をコメントアウト
+
+※2 Eigen/src/Core/products/GeneralBlockPanelKernel.h の 変数名 D1, D2, D3, D4 を _D1, _D2, _D3, _D4 のように変更 (ピン番号のマクロ定数名と競合のため)
 
 ## ファイル一覧
 
