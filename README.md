@@ -60,7 +60,7 @@ https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json
 
 ### Seeed XIAO nRF52840 環境でのビルドエラーについて
 
-1. src/Speaker.cpp, src/Speaker2.cpp のエラーの行をコメントアウト
+1. xiaogyan_arduino/src/Speaker.cpp, Speaker2.cpp のエラーの行をコメントアウト
 
 2. ArduinoEigen/Eigen/src/Core/products/GeneralBlockPanelKernel.h の 変数名 D1, D2, D3, D4 を適当に変更<br> (ピン番号のマクロ定数名と競合のため)
 
