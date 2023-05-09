@@ -14,10 +14,10 @@
       <div class="col text-center"><h1>GridSwitch 設定ツール</h1></div>
     </div>
       <!-- (1) 接続画面 -->
-      <div id="panel_connect" style="display:none">
+      <div id="panel_connect">
         <div class="row my-4 justify-content-center">
           <div class="col-6 mx-4"><div class="d-grid gap-2">
-              <button id="btn_connect" class="btn btn-primary btn-block rounded-pill">接続</button>
+              <button id="btn_connect" class="btn btn-primary rounded-pill">接続</button>
           </div></div>
         </div>
         <div class="row my-4" style="font-size: 1.2rem">
@@ -25,7 +25,7 @@
         </div>
       </div>
       <!-- (2) メイン画面 -->
-      <div id="panel_main">
+      <div id="panel_main" style="display:none">
         <!-- 見出し行 -->
         <div class="row mt-4 mb-0">
           <div class="col-1 text-center">No</div>
@@ -34,27 +34,27 @@
         </div>
         <!-- 各コマンドの設定行 -->
         <div class="row mt-2 mb-0">
-          <div class="col-1 text-center">1</div>
+          <div class="col-1 py-1 text-center">1</div>
           <div class="col"><input type="text" id="text_command_1A" class="form-control"></div>
           <div class="col"><input type="text" id="text_command_1B" class="form-control"></div>
         </div>
         <div class="row mt-2 mb-0">
-          <div class="col-1 text-center">2</div>
+          <div class="col-1 py-1 text-center">2</div>
           <div class="col"><input type="text" id="text_command_2A" class="form-control"></div>
           <div class="col"><input type="text" id="text_command_2B" class="form-control"></div>
         </div>
         <div class="row mt-2 mb-0">
-          <div class="col-1 text-center">3</div>
+          <div class="col-1 py-1 text-center">3</div>
           <div class="col"><input type="text" id="text_command_3A" class="form-control"></div>
           <div class="col"><input type="text" id="text_command_3B" class="form-control"></div>
         </div>
         <div class="row mt-2 mb-0">
-          <div class="col-1 text-center">4</div>
+          <div class="col-1 py-1 text-center">4</div>
           <div class="col"><input type="text" id="text_command_4A" class="form-control"></div>
           <div class="col"><input type="text" id="text_command_4B" class="form-control"></div>
         </div>
         <div class="row mt-2 mb-0">
-          <div class="col-1 text-center">5</div>
+          <div class="col-1 py-1 text-center">5</div>
           <div class="col"><input type="text" id="text_command_5A" class="form-control"></div>
           <div class="col"><input type="text" id="text_command_5B" class="form-control"></div>
         </div>
@@ -62,16 +62,16 @@
         <!-- [Reload] [Save] [Import] [Export] -->
         <div class="row mt-4 mb-0">
           <div class="col-3"><div class="d-grid gap-0">
-            <button id="btn_reload" class="btn btn-primary btn-block rounded-pill">Reload</button>
+            <button id="btn_reload" class="btn btn-primary rounded-pill">Reload</button>
           </div></div>
           <div class="col-3"><div class="d-grid gap-0">
-            <button id="btn_save" class="btn btn-primary btn-block rounded-pill">Save</button>
+            <button id="btn_save" class="btn btn-primary rounded-pill">Save</button>
           </div></div>
           <div class="col-3"><div class="d-grid gap-0">
-            <button id="btn_import" class="btn btn-primary btn-block rounded-pill">Import</button>
+            <button id="btn_import" class="btn btn-primary rounded-pill">Import</button>
           </div></div>
           <div class="col-3"><div class="d-grid gap-0">
-            <button id="btn_export" class="btn btn-primary btn-block rounded-pill">Export</button>
+            <button id="btn_export" class="btn btn-primary rounded-pill">Export</button>
           </div></div>
         </div>
 
@@ -81,7 +81,6 @@
 
     <!-- スクリプト -->
     <script src="lib/jsframe.min.js"></script>
-    <script src="KeyCodeTable.js"></script>
-    <script src="DebuggerKB_Config.js"></script>
+    <script src="GridSwitch_Config.js"></script>
   </body>
 </html>
