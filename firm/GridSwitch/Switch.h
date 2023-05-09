@@ -1,23 +1,18 @@
 #pragma once
 
-#include <stdint.h>
 #include <stdbool.h>
-
-// return value of Switch::get()
-#define SW_EVENT_NONE   0 // none
-#define SW_EVENT_SHORT  1 // short push
-#define SW_EVENT_LONG   2 // long push
 
 // Switch Class
 class Switch
 {
 public:
-    void begin(int pin);    // initialize
-    int  get();             // get switch event
+    void begin();           // initialize
+    bool getA();            // get A button event
+    bool getB();            // get B button event
+    int  getEnc();          // get Encoder
 
 private:
-    int         m_pin;      // pin number
-    int         m_state;    // pin state
-    uint32_t    m_t0;       // start time of push
-    bool        m_long;     // long push flag
+    int  m_stateA;          // A button state
+    int  m_stateB;          // B button state
+    int  m_stateEnc;        // Encoder state
 };

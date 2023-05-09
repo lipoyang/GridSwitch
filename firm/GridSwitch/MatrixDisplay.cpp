@@ -1,76 +1,59 @@
-#include "ColorLed.h"
+#include "Xiaogyan.hpp"
+#include "MatrixDisplay.h"
 
 // LED brightness
-#define LED_BRIGHTNESS  16
+#define LED_BRIGHTNESS  2 // TODO 要調整
+
+// font size
+#define FONT_SIZE       8
 
 // LED time limit [msec] (when battery powerd)
-#define LED_TIME1       3000 // for a while
-#define LED_TIME2       300  // for a moment
-
-// constructor
-ColorLed::ColorLed(int pin) : m_neoPixel(1, pin, NEO_GRB + NEO_KHZ800)
-{
-    m_turnedOn = false;
-}
+#define LED_TIME        3000
 
 // initialize
-void ColorLed::begin(int mode)
+void MatrixDisplay::begin(int mode)
 {
     m_mode = mode;
     
-    // Layer LED
-    m_neoPixel.begin();
-    m_neoPixel.setBrightness(LED_BRIGHTNESS);
+    Xiaogyan.ledMatrix.setBrightness(LED_BRIGHTNESS);
+    Xiaogyan.ledMatrix.fillScreen(COLOR_BLACK);
 }
 
-// set color of LED and turn on
-void ColorLed::setColor(uint32_t color)
+// turn off
+void MatrixDisplay::turnOff()
 {
-    m_color = color;
-    
-    m_neoPixel.setPixelColor(0, m_color);
-    m_neoPixel.show();
-    
-    if(m_mode == LED_BUS_POWERED) return;
-    m_timer.set(LED_TIME1);
-    m_turnedOn = true;
-}
-
-// turn off LED
-void ColorLed::turnOff()
-{
-    m_neoPixel.setPixelColor(0, 0);
-    m_neoPixel.show();
+    Xiaogyan.ledMatrix.fillScreen(COLOR_BLACK);
     
     m_turnedOn = false;
 }
 
-// turn on LED for a while
-void ColorLed::turnOnWhile()
+// fill with the color
+void MatrixDisplay::fill(int color)
 {
+    Xiaogyan.ledMatrix.fillScreen(color);
+    
     if(m_mode == LED_BUS_POWERED) return;
-    
-    m_neoPixel.setPixelColor(0, m_color);
-    m_neoPixel.show();
-    
-    m_timer.set(LED_TIME1);
+    m_timer.set(LED_TIME);
     m_turnedOn = true;
 }
 
-// turn on LED for a moment
-void ColorLed::turnOnMoment()
+// set color and number
+void MatrixDisplay::set(int color, int number);
 {
+    Xiaogyan.ledMatrix.drawChar(
+        1, 0,               // position (x,y)  TODO 要調整
+        '0' + (char)number, // number
+        (uint16_t) color,   // color
+        COLOR_BLACK,        // back ground color
+        FONT_SIZE);         // size
+    
     if(m_mode == LED_BUS_POWERED) return;
-    
-    m_neoPixel.setPixelColor(0, m_color);
-    m_neoPixel.show();
-    
-    m_timer.set(LED_TIME2);
+    m_timer.set(LED_TIME);
     m_turnedOn = true;
 }
 
 // LED control task
-void ColorLed::task()
+void MatrixDisplay::task()
 {
     if(m_mode == LED_BUS_POWERED) return;
     
@@ -78,7 +61,7 @@ void ColorLed::task()
     
     if(m_timer.elapsed()){
         m_turnedOn = false;
-        m_neoPixel.setPixelColor(0, m_neoPixel.Color(0,0,0));
-        m_neoPixel.show();
+        
+        this->turnOff();
     }
 }

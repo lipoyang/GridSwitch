@@ -8,11 +8,7 @@ class Power
 {
 public:
     // initialize
-    void begin(int pinLedPower, int pinWakeUp);
-    // LED Power ON
-    void turnOnLed();
-    // LED Power OFF
-    void turnOffLed();
+    void begin(int pinA, int pinB);
     // detect USB Vbus
     bool detectVbus(bool initial = false);
     // monitor Battery Voltage [mV]
@@ -27,8 +23,8 @@ public:
     void kick();
 
 private:
-    int  m_pinLedPower;     // LED Power ON pin
-    int  m_pinWakeUp;       // Wake Up pin
+    int  m_pinA;            // Wake Up pin A
+    int  m_pinB;            // Wake Up pin B
     int  m_lowBatCnt;       // Low Battery Count
     bool m_usbConnected;    // USB connected? (Vbus detected?)
     IntervalTimer m_timerVbat; // Interval Timer for Vbat

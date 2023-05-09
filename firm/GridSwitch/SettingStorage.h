@@ -3,39 +3,40 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "KeyMatrix.h"
+#include "SettingStorage.h"
 
-// How many keymap layers
-#define PAGE_MAX      8
+#define GRID_MAX        5       // grid 1 - 5
+#define COMMAND_MAX     10      // (grid 1 - 5) * (unit A, B) commands
+#define COMMAND_LEN     32      // 31 characters max
 
-// Keymap data
-struct KeyMap
-{
-    bool    Enabled;            // use this layer?
-    uint8_t Name[20];           // Name (not used in this device side)
-    uint8_t Led[3];             // LED color {R,G,B}
-    uint8_t Modifiers[KEY_MAX]; // key modifiers [physical key number]
-    uint8_t KeyCodes [KEY_MAX]; // key code      [physical key number]
-};
+#define UNIT_A          0       // unit A (mm)
+#define UNIT_B          1       // unit B (inch)
 
-// Keymap Storage Class
-class KeyMapStorage
+// Setting Storage Class
+class SettingStorage
 {
 public:
-    KeyMap keyMaps[PAGE_MAX]; // Keymap data
+    char commandTable[COMMAND_MAX][COMMAND_LEN]; // command table
     
     void begin();           // initialize
-    void changeLayer(bool); // change Keymap Layer
     void load();            // load Keymap data from data Flash
     void save();            // save Keymap data to data Flash
-
-    uint32_t getLedColor(); // get LED color
-    void getKeyTable(uint8_t keyTable[][KEY_COMBI_MAX] ); // get Key matrix table
-    
     void factoryReset();    // execute factory reset
+    
+    void setA();            // set A button
+    void setB();            // set B button
+    void setEnc(int enc);   // set Encoder
+    bool todo();            // is there event to do ?
+    int      getCommandLength(); // get command length
+    uint8_t* getCommandCode();   // get command code
+    int getUnit();          // unit A or B ?
+    int getNumber();        // get grid number (1-5)
 
 private:
-    int               m_layer;   // Keymap Layer
-    
     void setDefaultValue(); // set default value
+    
+    uint8_t m_commandCode[COMMAND_LEN];
+    bool m_todo;            // is there event to do ?
+    int  m_unit;            // unit A or B ?
+    int  m_number;          // get grid number (0-4) <- ZERO ORIGIN!!!
 };

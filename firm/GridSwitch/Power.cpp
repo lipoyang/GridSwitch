@@ -13,20 +13,16 @@
 #define NO_OP_TIME      (10*60*1000)    // No Operation time limit [msec]
 
 // initialize
-void Power::begin(int pinLedPower, int pinWakeUp)
+void Power::begin(int pinA, int pinB)
 {
     // Debug Serial (TxD only)
-    Serial1.begin(115200);
-    NRF_UARTE0->PSEL.RXD = 0xFFFFFFFF; // Disable RxD
+//  Serial1.begin(115200);
+//  NRF_UARTE0->PSEL.RXD = 0xFFFFFFFF; // Disable RxD
 //  Serial1.println("Start!");
     
-    // Power ON for NeoPixel LED
-    m_pinLedPower = pinLedPower;
-    pinMode(m_pinLedPower, OUTPUT);
-    this->turnOnLed();
-    
-    // Wake Up Pin (Layer Switch)
-    m_pinWakeUp = pinWakeUp;
+    // Wake Up Pin
+    m_pinA = pinA;
+    m_pinB = pinB;
     
     // on-board LEDs
     pinMode(LED_RED,    OUTPUT);
@@ -51,20 +47,6 @@ void Power::begin(int pinLedPower, int pinWakeUp)
     // detect Vbus
     delay(100);
     this->detectVbus(true);
-}
-
-// LED Power ON
-void Power::turnOnLed()
-{
-//  pinMode(m_pinLedPower, OUTPUT);
-    digitalWrite(m_pinLedPower, HIGH);
-}
-
-// LED Power OFF
-void Power::turnOffLed()
-{
-//  pinMode(m_pinLedPower, INPUT);  
-    digitalWrite(m_pinLedPower, LOW);
 }
 
 // detect USB Vbus
@@ -117,7 +99,8 @@ void Power::sleep()
         this->turnOffLed();
         
         // setup wake-up pin.
-        pinMode(m_pinWakeUp,  INPUT_PULLUP_SENSE);
+        pinMode(m_pinA, INPUT_PULLUP_SENSE);
+        pinMode(m_pinB, INPUT_PULLUP_SENSE);
         // power down nrf52.
         sd_power_system_off(); 
     }

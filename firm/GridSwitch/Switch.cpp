@@ -1,54 +1,52 @@
-#include <Arduino.h>
+#include "Xiaogyan.hpp"
 #include "Switch.h"
 
-// Time threshold
-#define T1  20      // short push
-#define T2  1000    // long push
-
 // initialize
-void Switch::begin(int pin)
+void Switch::begin()
 {
-    m_pin = pin;
-    m_state = HIGH;
+    m_stateA = HIGH;
+    m_stateB = HIGH;
+    m_stateEnc = 0;
     
-    pinMode(m_pin, INPUT_PULLUP);
-    delay(100);
+    // define Encoder's handler
+    Xiaogyan.encoder.setRotatedHandler([](bool cw){
+        m_stateEnc = m_stateEnc + (cw ? -1 : 1);
+    });
 }
 
-// get switch event
-int Switch::get()
+// get A button event
+bool Switch::getA()
 {
-    int state = digitalRead(m_pin);
+    int state = Xiaogyan.buttonA.read();
     
-    if(m_state == HIGH){
-        // HIGH -> LOW (push)
-        if(state == LOW){
-            m_long = false;
-            m_state = LOW;
-            m_t0 = millis();
-        }
-    }else{
-        uint32_t now = millis();
-        uint32_t elapsed = now - m_t0;
-        
-        // LOW -> HIGH (release)
-        if(state == HIGH){
-            m_state = HIGH;
-            if(elapsed >= T2){
-                // return SW_EVENT_LONG;
-            }else if(elapsed >= T1){
-                return SW_EVENT_SHORT;
-            }
-        }
-        // LOW -> LOW (keep pushing)
-        else{
-            if(!m_long){
-                if(elapsed >= T2){
-                    m_long = true;
-                    return SW_EVENT_LONG;
-                }
-            }
-        }
+    bool event = false;
+    if((m_stateA == HIGH) && (state == LOW)){
+        event = true;
     }
-    return SW_EVENT_NONE;
+    m_stateA = state;
+    
+    return event;
+}
+
+// get B button event
+bool Switch::getB()
+{
+    int state = Xiaogyan.buttonB.read();
+    
+    bool event = false;
+    if((m_stateB == HIGH) && (state == LOW)){
+        event = true;
+    }
+    m_stateB = state;
+    
+    return event;
+}
+
+// get Encoder
+int Switch::getEnc()
+{
+    int val = m_stateEnc;
+    m_stateEnc = 0;
+    
+    return val;
 }

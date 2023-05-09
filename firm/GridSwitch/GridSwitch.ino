@@ -1,24 +1,23 @@
 #include <Adafruit_TinyUSB.h>
-#include <Adafruit_NeoPixel.h>
+#include "Xiaogyan.hpp"
 #include "UsbKeyboard.h"
 #include "BleKeyboard.h"
 #include "SerialCommand.h"
-#include "KeyMatrix.h"
+#include "SettingStorage.h"
 #include "Power.h"
 #include "Switch.h"
-#include "ColorLed.h"
+#include "MatrixDisplay.h"
 #include "PollingTimer.h"
 
-#define PIN_PAGE_SW      9  // Layer Swith pin
-#define PIN_LED_POWER    7  // LED Power ON pin
-#define PIN_PAGE_LED    10  // LED pin
+#define PIN_A            9  // Button A Pin
+#define PIN_B            7  // Button B Pin
 
 #define KEY_INTERVAL     5  // Key Interval [msec]
 
-// Layer Switch
-Switch layerSwitch;
-// Layer LED
-ColorLed layerLed(PIN_PAGE_LED);
+// Buttons and Encoder
+Switch gridSwitch;
+// Matrix LED Display
+MatrixDisplay matrixDisplay;
 // Power Controller
 Power power;
 
@@ -29,19 +28,10 @@ BleKeyboard bleKeyboard;
 // USB or BLE Keyboard
 Keyboard *keyboard;
 
-// Key Matrix
-KeyMatrix keyMatrix;
 // Serial Command
 SerialCommand serialCommand;
-// Keymap Storage
-KeyMapStorage keyMapStorage;
-
-// Output Pins (for Key Matrix)
-int outPin[ROW_NUM] = { 0, 1 };
-// Input Pins  (for Key Matrix)
-int inPin [COL_NUM] = { 2, 3, 4, 5, 8 };
-// Keycode 
-uint8_t keyTable[KEY_MAX][KEY_COMBI_MAX];
+// Setting Storage
+SettingStorage settingStorage;
 
 // is USB connected?
 bool isUsbConnected;
@@ -52,21 +42,21 @@ IntervalTimer interval;
 // Initialize
 void setup()
 {
+    // XIAOGYAN
+    Xiaogyan.begin();
+    
     // Power
-    power.begin(PIN_LED_POWER, PIN_PAGE_SW);
+    power.begin(PIN_A, PIN_B);
     
-    // Layer Switch
-    layerSwitch.begin(PIN_PAGE_SW);
+    // Buttons and Encoder
+    gridSwitch.begin();
     
-    // Layer LED
+    // Matrix LED Display
     if (power.detectVbus()) {
-        layerLed.begin(LED_BUS_POWERED);
+        matrixDisplay.begin(LED_BUS_POWERED);
     } else {
-        layerLed.begin(LED_BAT_POWERED);
+        matrixDisplay.begin(LED_BAT_POWERED);
     }
-    
-    // begin Key Matrix
-    keyMatrix.begin(outPin, inPin);
     
     // detect VBUS
     if (power.detectVbus()) {
@@ -76,11 +66,13 @@ void setup()
         isUsbConnected = true;
         
         // Factory Reset?
-        if(keyMatrix.pressFactoryReset()){
-            layerLed.setColor(COLOR_RED);
+        if( (Xiaogyan.buttonA.read() == LOW) &&
+            (Xiaogyan.buttonB.read() == LOW) )
+        {
+            matrixDisplay.fill(COLOR_RED);
             delay(1000);
-            keyMapStorage.factoryReset();
-            layerLed.setColor(COLOR_GREEN);
+            settingStorage.factoryReset();
+            matrixDisplay.turnOff();
             delay(3000);
             NVIC_SystemReset();
         }
@@ -96,18 +88,14 @@ void setup()
     keyboard->begin();
     
     // begin Serial Command
-    serialCommand.keyMaps = keyMapStorage.keyMaps;
+    serialCommand.commandTable = settingStorage.commandTable;
     if(isUsbConnected) serialCommand.begin();
     
-    // Keymap Strage
-    keyMapStorage.begin();
-    keyMapStorage.getKeyTable(keyTable);
+    // Setting Storage
+    settingStorage.begin();
     
-    // set Keymap to Key Matrix
-    keyMatrix.setKeyTable(keyTable);
-    
-    // show Layer LED
-    layerLed.setColor(keyMapStorage.getLedColor());
+    // init Matrix LED Display
+    matrixDisplay.turnOff();
     
     // begin Interval Timer
     interval.set(KEY_INTERVAL);
@@ -116,11 +104,14 @@ void setup()
 // Main Loop
 void loop()
 {
+    // XIAOGYAN
+    Xiaogyan.doWork();
+    
     // key interval
     if(!interval.elapsed()) return;
 
-    // layer LED control
-    layerLed.task();
+    // Matrix LED Display control
+    matrixDisplay.task();
     
     // check low battery voltage
     bool lowBattery = power.checkLowBattery();
@@ -128,7 +119,7 @@ void loop()
     bool noOperation = power.checkNoOperation();
     // sleep?
     if(lowBattery || noOperation){
-        layerLed.turnOff();
+        matrixDisplay.turnOff();
         power.sleep();
     }
     
@@ -136,53 +127,45 @@ void loop()
     if(isUsbConnected){
         int ret = serialCommand.task();
         if(ret == RET_WRITE){
-            keyMapStorage.save();
-            keyMapStorage.changeLayer(false);
-            keyMapStorage.getKeyTable(keyTable);
-            keyMatrix.setKeyTable(keyTable);
-            
-            layerLed.setColor(keyMapStorage.getLedColor());
+            settingStorage.save();
+            matrixDisplay.turnOff();
         }
     }
     
-    // get layer switch event
-    int event = layerSwitch.get();
-    if(event == SW_EVENT_SHORT){
-        keyMapStorage.changeLayer(true);
-        keyMapStorage.getKeyTable(keyTable);
-        keyMatrix.setKeyTable(keyTable);
-        
-        layerLed.setColor(keyMapStorage.getLedColor());
-        power.kick();
-    }
-    else if(event == SW_EVENT_LONG){
-        layerLed.turnOnWhile();
-        power.kick();
-    }
-
     // skip if hid is not ready
     if ( !keyboard->ready() ) return;
 
-    // scan key matrix
-    if(keyMatrix.scan()){
-        // press any key?
-        if(keyMatrix.pressAnyKey()){
-            // wake up
-            keyboard->wakeup();
-            // get key code
+    // get Buttons and Encoder
+    if(gridSwitch.getA()) settingStorage.setA();
+    if(gridSwitch.getB()) settingStorage.setB();
+    int enc = gridSwitch.getEnc();
+    if(enc != 0) settingStorage.setEnc(enc);
+    
+    // event
+    if(settingStorage.todo()){
+        // wake up
+        keyboard->wakeup();
+        
+        // get command
+        int len = settingStorage.getCommandLength();
+        uint8_t *command = settingStorage.getCommandCode();
+        
+        // send command
+        for(int i = 0; i <= len; i++){
             uint8_t keycode[KEY_CODE_MAX] = { 0 };
-            keyMatrix.getKey(keycode);
-            
-            // keyboard report
-            if(keycode[0] != 0){
-                keyboard->keyboardReport(keycode);
-                
-                layerLed.turnOnMoment();
-                power.kick();
-            }
-        }else{
+            keycode[0] = command[i];
+            // key report
+            keyboard->keyboardReport(keycode);
+            delay(100); // TODO 要調整
             // key release
             keyboard->keyboardRelease();
+            delay(100); // TODO 要調整
         }
+        // display
+        int color = (settingStorage.getUnit() == UNIT_A) ? COLOR_GREEN : COLOR_RED;
+        int number = settingStorage.getNumber();
+        matrixDisplay.set(color, number);
+        
+        power.kick();
     }
 }

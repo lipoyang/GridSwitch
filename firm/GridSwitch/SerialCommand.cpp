@@ -9,50 +9,6 @@
 #define ERR_COMMAND   0x81 // ERROR: Invalid Command
 #define ERR_PARAM     0x82 // ERROR: Invalid Parameter
 
-// Response size of READ command
-#define READ_DATA_SIZE  45
-
-// Byte array -> Keymap object
-bool SerialCommand::BytesToKeyMap(KeyMap *keyMap, uint8_t *bData)
-{
-    // Enabled?
-    keyMap->Enabled = (bData[0] == 0) ? false : true;
-    // Name
-    for(int i = 0; i < 20; i++){
-        keyMap->Name[i] = bData[1 + i];
-    }
-    // LED color
-    keyMap->Led[0] = bData[21];
-    keyMap->Led[1] = bData[22];
-    keyMap->Led[2] = bData[23];
-    // Each Key
-    for(int key = 0; key < KEY_MAX; key++){
-        keyMap->Modifiers[key] = bData[24 + 2 * key];
-        keyMap->KeyCodes [key] = bData[25 + 2 * key];
-    }
-    return true;
-}
-
-// Keymap object -> Byte array
-void SerialCommand::KeyMapToBytes(KeyMap *keyMap, uint8_t *bData)
-{
-    // Enabled?
-    bData[0] = keyMap->Enabled ? 0x01 : 0x00;
-    // Name
-    for(int i = 0; i < 20; i++){
-        bData[1 + i] = keyMap->Name[i];
-    }
-    // LED color
-    bData[21] = keyMap->Led[0];
-    bData[22] = keyMap->Led[1];
-    bData[23] = keyMap->Led[2];
-    // Each Key
-    for(int key = 0; key < KEY_MAX; key++){
-        bData[24 + 2 * key] = keyMap->Modifiers[key];
-        bData[25 + 2 * key] = keyMap->KeyCodes [key];
-    }
-}
-
 // send response
 // command: command code
 // data: data buffer
@@ -164,35 +120,33 @@ int SerialCommand::task()
         recvCnt = 0; // reset receiving counter
         
         uint8_t  command =  telegram[3]; // Command code
-        uint8_t  layer   =  telegram[4]; // Layer number
-        uint8_t *bData; // bynary array of Keymap data
-        // check layer number
-        if(layer >= PAGE_MAX){
+        uint8_t  index   =  telegram[4]; // table index
+        
+        // check table index
+        if(index >= COMMAND_MAX){
             sendResponse(ERR_PARAM); // error response
             goto _ERROR;
         }
         switch(command){
             case COM_READ: // Device -> PC
             {
-                // Byte array -> Keymap object
                 static uint8_t data[64];
-                data[0] = layer;
-                bData = &data[1];
-                KeyMapToBytes(&keyMaps[layer], bData);
+                data[0] = index;
+                memcpy(&data[1], commandTable[index], COMMAND_LEN);
+                
                 // send response
-                sendResponse(COM_READ, data, READ_DATA_SIZE);
+                sendResponse(COM_READ, data, 1 + COMMAND_LEN);
                 break;
             }
             case COM_WRITE: // Device <- PC
             {
-                // Keymap object -> Byte array
-                bData = &telegram[5];
-                BytesToKeyMap(&keyMaps[layer], bData);
-                // send response
-                sendResponse(COM_WRITE, &layer, 1);
+                memcpy(commandTable[index], &telegram[5], COMMAND_LEN);
                 
-                // last layer?
-                if(layer == PAGE_MAX - 1)
+                // send response
+                sendResponse(COM_WRITE, &index, 1);
+                
+                // last index?
+                if(index == COMMAND_MAX - 1)
                 {
                     return RET_WRITE;
                 }
