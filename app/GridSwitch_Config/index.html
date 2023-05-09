@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
   <head>
-    <title>DebuggerKB 設定ツール</title>
+    <title>GridSwitch 設定ツール</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
@@ -11,10 +11,10 @@
   <body>
     <div class="container" style="max-width: 600px">
     <div class="row m-2">
-      <div class="col text-center"><h1>DebuggerKB 設定ツール</h1></div>
+      <div class="col text-center"><h1>GridSwitch 設定ツール</h1></div>
     </div>
       <!-- (1) 接続画面 -->
-      <div id="panel_connect">
+      <div id="panel_connect" style="display:none">
         <div class="row my-4 justify-content-center">
           <div class="col-6 mx-4"><div class="d-grid gap-2">
               <button id="btn_connect" class="btn btn-primary btn-block rounded-pill">接続</button>
@@ -25,117 +25,38 @@
         </div>
       </div>
       <!-- (2) メイン画面 -->
-      <div id="panel_main" style="display:none">
-        <!-- [前] [レイヤー] [次] [切断] -->
-        <div class="row mt-2 mb-0">
-          <div class="col-2"><div class="d-grid gap-0">
-            <button id="btn_prev" class="btn btn-primary btn-block rounded-pill">前</button>
-          </div></div>
-          <div class="col-6" style="font-size: 1.5rem">
-            <div class="text-center" id="text_layer">レイヤー 1/8</div>
-          </div>
-          <div class="col-2"><div class="d-grid gap-0">
-            <button id="btn_next" class="btn btn-primary btn-block rounded-pill">次</button>
-          </div></div>
-          <div class="col-2"><div class="d-grid gap-0">
-              <button id="btn_disconnect" class="btn btn-danger btn-block rounded-pill">切断</button>
-          </div></div>
-        </div>
-        <!-- [使用する] [LED表示色] [名前] -->
-        <div class="row mt-4 mb-0">
-          <div class="col-3" style="font-size: 1.2rem">使用する</div>
-          <div class="col-3">
-            <input class="form-check-input" type="checkbox" value="" id="check_enabled">
-          </div>
-          <div class="col-3" style="font-size: 1.2rem">LED表示色</div>
-          <div class="col-3">
-            <input type="color" id="color_led"/>
-          </div>
-        </div>
-        <div class="row mt-2 mb-0">
-          <div class="col-3" style="font-size: 1.2rem">名前</div>
-          <div class="col-9">
-            <input type="text" id="text_name" class="form-control">
-          </div>
-        </div>
+      <div id="panel_main">
         <!-- 見出し行 -->
         <div class="row mt-4 mb-0">
-          <div class="col-3"> </div>
-          <div class="col-2">Alt</div>
-          <div class="col-2">Ctrl</div>
-          <div class="col-2">Shift</div>
-          <div class="col-3">Key</div>
+          <div class="col-1 text-center">No</div>
+          <div class="col text-center">mm</div>
+          <div class="col text-center">inch</div>
         </div>
-        <!-- 各キーの設定行 -->
+        <!-- 各コマンドの設定行 -->
         <div class="row mt-2 mb-0">
-          <div class="col-3"><img src="debug.png" alt="Debug" /></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_a1"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_c1"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_s1"></div>
-          <div class="col-3"><input type="text" id="text_key1" class="form-control"></div>
+          <div class="col-1 text-center">1</div>
+          <div class="col"><input type="text" id="text_command_1A" class="form-control"></div>
+          <div class="col"><input type="text" id="text_command_1B" class="form-control"></div>
         </div>
         <div class="row mt-2 mb-0">
-          <div class="col-3"><img src="run.png" alt="Run" /></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_a2"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_c2"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_s2"></div>
-          <div class="col-3"><input type="text" id="text_key2" class="form-control"></div>
+          <div class="col-1 text-center">2</div>
+          <div class="col"><input type="text" id="text_command_2A" class="form-control"></div>
+          <div class="col"><input type="text" id="text_command_2B" class="form-control"></div>
         </div>
         <div class="row mt-2 mb-0">
-          <div class="col-3"><img src="continue.png" alt="Continue" /></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_a3"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_c3"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_s3"></div>
-          <div class="col-3"><input type="text" id="text_key3" class="form-control"></div>
+          <div class="col-1 text-center">3</div>
+          <div class="col"><input type="text" id="text_command_3A" class="form-control"></div>
+          <div class="col"><input type="text" id="text_command_3B" class="form-control"></div>
         </div>
         <div class="row mt-2 mb-0">
-          <div class="col-3"><img src="pause.png" alt="Pause" /></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_a4"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_c4"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_s4"></div>
-          <div class="col-3"><input type="text" id="text_key4" class="form-control"></div>
+          <div class="col-1 text-center">4</div>
+          <div class="col"><input type="text" id="text_command_4A" class="form-control"></div>
+          <div class="col"><input type="text" id="text_command_4B" class="form-control"></div>
         </div>
         <div class="row mt-2 mb-0">
-          <div class="col-3"><img src="stop.png" alt="Stop" /></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_a5"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_c5"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_s5"></div>
-          <div class="col-3"><input type="text" id="text_key5" class="form-control"></div>
-        </div>
-        <div class="row mt-2 mb-0">
-          <div class="col-3"><img src="stepover.png" alt="Step Over" /></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_a6"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_c6"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_s6"></div>
-          <div class="col-3"><input type="text" id="text_key6" class="form-control"></div>
-        </div>
-        <div class="row mt-2 mb-0">
-          <div class="col-3"><img src="stepin.png" alt="Step In" /></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_a7"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_c7"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_s7"></div>
-          <div class="col-3"><input type="text" id="text_key7" class="form-control"></div>
-        </div>
-        <div class="row mt-2 mb-0">
-          <div class="col-3"><img src="stepout.png" alt="Step Out" /></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_a8"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_c8"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_s8"></div>
-          <div class="col-3"><input type="text" id="text_key8" class="form-control"></div>
-        </div>
-        <div class="row mt-2 mb-0">
-          <div class="col-3"><img src="runto.png" alt="Run To" /></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_a9"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_c9"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_s9"></div>
-          <div class="col-3"><input type="text" id="text_key9" class="form-control"></div>
-        </div>
-        <div class="row mt-2 mb-0">
-          <div class="col-3"><img src="restart.png" alt="Restart" /></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_a10"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_c10"></div>
-          <div class="col-2"><input class="form-check-input" type="checkbox" value="" id="check_s10"></div>
-          <div class="col-3"><input type="text" id="text_key10" class="form-control"></div>
+          <div class="col-1 text-center">5</div>
+          <div class="col"><input type="text" id="text_command_5A" class="form-control"></div>
+          <div class="col"><input type="text" id="text_command_5B" class="form-control"></div>
         </div>
 
         <!-- [Reload] [Save] [Import] [Export] -->
