@@ -14,7 +14,7 @@ GridSwitch
 <img src="img/overview.png" width="600">
 
 ## コマンドの設定
-[Webアプリ](app/DebuggerKB_Config/)から、グリッドの単位/幅を設定するコマンドを設定できます。
+[Webアプリ](app/GridSwitch_Config/)から、グリッドの単位/幅を設定するコマンドを設定できます。
 
 キーボードをUSB接続すると、HIDと仮想COMポートの複合デバイスになるので、Webアプリから仮想COMポートを選択して接続します。
 
