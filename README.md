@@ -58,7 +58,7 @@ https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json
 <tr><td>Adafruit BusIO</td><td>Adafruit GFXが依存</td></tr>
 </table>
 
-### Seeed XIAO nRF52840 環境でのビルドエラーについて
+### Seeed XIAO nRF52840 環境でのビルドエラーについて (要ハック)
 
 1. xiaogyan_arduino/src/Speaker.cpp, Speaker2.cpp のエラーの行をコメントアウト
 
