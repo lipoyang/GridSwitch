@@ -1,16 +1,19 @@
 #include "Xiaogyan.hpp"
 #include "Switch.h"
 
+static int *p_stateEnc;
+
 // initialize
 void Switch::begin()
 {
     m_stateA = HIGH;
     m_stateB = HIGH;
     m_stateEnc = 0;
+    p_stateEnc = &m_stateEnc;
     
     // define Encoder's handler
     Xiaogyan.encoder.setRotatedHandler([](bool cw){
-        m_stateEnc = m_stateEnc + (cw ? -1 : 1);
+        *p_stateEnc = *p_stateEnc + (cw ? -1 : 1);
     });
 }
 

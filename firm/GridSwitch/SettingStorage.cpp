@@ -86,7 +86,7 @@ void SettingStorage::load()
 }
 
 // save Keymap data to data Flash
-void KeyMapStorage::save()
+void SettingStorage::save()
 {
     if( g_file.open(FILENAME, FILE_O_WRITE) )
     {
@@ -147,26 +147,29 @@ void SettingStorage::setB()
     m_unit = UNIT_B;
     m_todo = true;
 }
+
 // set Encoder
 void SettingStorage::setEnc(int enc)
 {
+    int number;
+    
     if (m_number == -1){
-        m_number = 0;
+        number = 0;
     }else{
         if(enc > 0) enc =  1;
-        if(end < 0) enc = -1;
-        int number = m_number + enc;
+        if(enc < 0) enc = -1;
+        number = m_number + enc;
         if(number <  0)        number = GRID_MAX - 1;
         if(number >= GRID_MAX) number = 0;
+    
+        int command = m_unit * GRID_MAX + number;
+    
+        if(commandTable[command][0] == 0) return; // invalid command
     }
-    
-    int command = m_unit * GRID_MAX + number;
-    
-    if(commandTable[command][0] == 0) return; // invalid command
-    
     m_number = number;
     m_todo = true;
 }
+
 // is there event to do ?
 bool SettingStorage::todo()
 {
@@ -174,6 +177,7 @@ bool SettingStorage::todo()
     m_todo = false;
     return ret;
 }
+
 // get command length
 int SettingStorage::getCommandLength()
 {
@@ -231,4 +235,3 @@ int SettingStorage::getNumber()
 {
     return m_number + 1;
 }
-

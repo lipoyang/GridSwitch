@@ -38,7 +38,7 @@ void MatrixDisplay::fill(int color)
 }
 
 // set color and number
-void MatrixDisplay::set(int color, int number);
+void MatrixDisplay::set(int color, int number)
 {
     Xiaogyan.ledMatrix.drawChar(
         1, 0,               // position (x,y)  TODO 要調整

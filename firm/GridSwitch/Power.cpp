@@ -95,9 +95,6 @@ void Power::sleep()
 //      Serial1.println("Sleep!");
 //      delay(1000);
         
-        // power off for NeoPixel LED
-        this->turnOffLed();
-        
         // setup wake-up pin.
         pinMode(m_pinA, INPUT_PULLUP_SENSE);
         pinMode(m_pinB, INPUT_PULLUP_SENSE);
