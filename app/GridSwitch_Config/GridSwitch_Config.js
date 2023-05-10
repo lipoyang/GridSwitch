@@ -133,7 +133,7 @@ btn_export.addEventListener('click', async function (){
 // コマンドテーブル → UI表示
 function showCommandTable()
 {
-  for(let index = 0; index < COMMAN_MAX; index++){
+  for(let index = 0; index < COMMAND_MAX; index++){
     text_command[index].value = commandTable[index];
   }
 }
@@ -141,7 +141,7 @@ function showCommandTable()
 // UI表示 → コマンドテーブル
 function setCommandTable()
 {
-  for(let index = 0; index < COMMAN_MAX; index++){
+  for(let index = 0; index < COMMAND_MAX; index++){
     commandTable[index] = text_command[index].value;
   }
 }
@@ -156,7 +156,7 @@ async function loadCommandTable()
   let errorIndex = -1;
 
   // 番号ごとにREADコマンドを実行
-  for(let index = 0; index < COMMAN_MAX; index++){
+  for(let index = 0; index < COMMAND_MAX; index++){
     // コマンド送信
     const command = COM_READ;
     const data = [ index ];
@@ -227,7 +227,7 @@ async function saveCommandTable()
   setCommandTable();
 
   // 番号ごとにWRITEコマンドを実行
-  for(let index = 0; index < COMMAN_MAX; index++){
+  for(let index = 0; index < COMMAND_MAX; index++){
     // 送信データの生成
     const bData = new TextEncoder().encode(commandTable[index]);
     const data = new Uint8Array(1 + COMMAND_LEN);
