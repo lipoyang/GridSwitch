@@ -32,7 +32,7 @@ void BleKeyboard::begin()
 
     // Configure and Start Device Information Service
     bledis.setManufacturer("Nara Kikaiken"); // TODO
-    bledis.setModel("Debugger Keyboard");    // TODO
+    bledis.setModel("GridSwitch");           // TODO
     bledis.begin();
 
     // Start BLE HID
