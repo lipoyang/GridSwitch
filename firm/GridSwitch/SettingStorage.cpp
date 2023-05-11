@@ -108,6 +108,7 @@ void SettingStorage::save()
 //          Serial1.print("pos  = "); Serial1.println(pos);
 //          Serial1.print("size = "); Serial1.println(size);
 //          Serial1.println((char*)commandTable[0]);
+            digitalWrite(LED_RED, HIGH);
         }else{
 //          Serial1.println("write ERROR!");
             digitalWrite(LED_RED, LOW);
