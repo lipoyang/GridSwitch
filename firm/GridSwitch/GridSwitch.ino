@@ -13,6 +13,7 @@
 #define PIN_B            7  // Button B Pin
 
 #define KEY_INTERVAL     5  // Key Interval [msec]
+#define HID_KEY_DELAY    4  // HID Key event delay [msec]
 
 // Buttons and Encoder
 Switch gridSwitch;
@@ -156,10 +157,10 @@ void loop()
             keycode[0] = command[i];
             // key report
             keyboard->keyboardReport(keycode);
-            delay(100); // TODO 要調整
+            delay(HID_KEY_DELAY);
             // key release
             keyboard->keyboardRelease();
-            delay(100); // TODO 要調整
+            delay(HID_KEY_DELAY);
         }
         // display
         int color = (settingStorage.getUnit() == UNIT_A) ? COLOR_GREEN : COLOR_RED;

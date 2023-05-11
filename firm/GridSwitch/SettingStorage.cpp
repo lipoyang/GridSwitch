@@ -36,7 +36,7 @@ void SettingStorage::setDefaultValue()
     
     static const char DEF_VALUE[COMMAND_MAX][COMMAND_LEN] = {
         "grid mm 1.27 2",       // A 1
-        "grid mm 0.625  2",     // A 2
+        "grid mm 0.625 2",      // A 2
         "grid mm 1 5",          // A 3
         "grid mm 0.5 2",        // A 4
         "",                     // A 5
@@ -83,6 +83,11 @@ void SettingStorage::load()
         digitalWrite(LED_RED, LOW);
         this->setDefaultValue(); // set default value
     }
+//  for(int i = 0; i < COMMAND_MAX; i++){
+//      Serial1.print("[");
+//      Serial1.print(commandTable[i]);
+//      Serial1.print("]\n");
+//  } 
 }
 
 // save Keymap data to data Flash
@@ -199,6 +204,7 @@ uint8_t* SettingStorage::getCommandCode()
 {
     int command = m_unit * GRID_MAX + m_number;
     
+    // HID Key Code https://github.com/hathach/tinyusb/blob/master/src/class/hid/hid.h
     for(int i = 0; i < COMMAND_LEN; i++){
         char c = commandTable[command][i];
         if(c == 0){
@@ -208,8 +214,10 @@ uint8_t* SettingStorage::getCommandCode()
             m_commandCode[i] = HID_KEY_A + (c - 'a');
         }else if(c >= 'A' && c <= 'Z'){
             m_commandCode[i] = HID_KEY_A + (c - 'Z');
-        }else if(c >= '0' && c <= '9'){
-            m_commandCode[i] = HID_KEY_0 + (c - '0');
+        }else if(c == '0'){
+            m_commandCode[i] = HID_KEY_0;
+        }else if(c >= '1' && c <= '9'){
+            m_commandCode[i] = HID_KEY_1 + (c - '1');
         }else if(c == ' '){
             m_commandCode[i] = HID_KEY_SPACE;
         }else if(c == ','){
