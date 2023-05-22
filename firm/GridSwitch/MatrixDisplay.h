@@ -8,8 +8,8 @@
 #define LED_BUS_POWERED     1
 
 #define COLOR_BLACK     0
-#define COLOR_RED       1 // TODO 要確認
-#define COLOR_GREEN     2 // TODO 要確認
+#define COLOR_RED       1
+#define COLOR_GREEN     2
 #define COLOR_ORANGE    3
 
 // Matrix LED Display

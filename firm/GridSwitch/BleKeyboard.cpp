@@ -31,8 +31,8 @@ void BleKeyboard::begin()
     Bluefruit.setTxPower(TX_POWER);
 
     // Configure and Start Device Information Service
-    bledis.setManufacturer("Nara Kikaiken"); // TODO
-    bledis.setModel("GridSwitch");           // TODO
+    bledis.setManufacturer("Nara Kikaiken");
+    bledis.setModel("GridSwitch");
     bledis.begin();
 
     // Start BLE HID

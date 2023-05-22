@@ -164,7 +164,7 @@ void SettingStorage::setEnc(int enc)
     }else{
         if(enc > 0) enc =  1;
         if(enc < 0) enc = -1;
-        number = m_number + enc;
+        number = m_number - enc; // - for clockwise
         if(number <  0)        number = GRID_MAX - 1;
         if(number >= GRID_MAX) number = 0;
     
