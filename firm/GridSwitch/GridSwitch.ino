@@ -152,9 +152,13 @@ void loop()
         uint8_t *command = settingStorage.getCommandCode();
         
         // send command
-        for(int i = 0; i <= len; i++){
+        for(int i = 0; i <= len;  /* i++ */ ){
             uint8_t keycode[KEY_CODE_MAX] = { 0 };
-            keycode[0] = command[i];
+            for(int j = 0; j < KEY_CODE_MAX; j++){
+                keycode[j] = command[i];
+                i++;
+                if(i > len) break;
+            }
             // key report
             keyboard->keyboardReport(keycode);
             delay(HID_KEY_DELAY);
