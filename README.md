@@ -1,6 +1,6 @@
-GridSwitch
+XIAOGYANでEagleのグリッド切り替え
 =========
-<img src="img/photo.jpg" width="600">
+[![動画](https://img.youtube.com/vi/lJcA-dndRM4/0.jpg)](https://www.youtube.com/watch?v=lJcA-dndRM4)
 
 ## 概要
 基板CAD Eagle用のグリッド切り替えデバイスです。
