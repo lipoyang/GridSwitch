@@ -8,8 +8,8 @@ GridSwitch
 * 2つのボタンでグリッドの単位(mm / inch)を切り替えます。
 * ツマミでグリッド幅を切り替えます。
 * グリッドの単位/幅を設定するコマンドの設定はUSB接続時にWebアプリから設定可能。<br>(PC版の Chrome や Edge など Web Serial API に対応したブラウザが必要)
-* Nordic nRF52840 搭載。 (Seeed Studio XIAO nRF52840)
 * [XIAOGYAN](https://github.com/algyan/XIAOGYAN) の基板を使用。
+* マイコンは[Seeed Studio XIAO nRF52840](https://www.switch-science.com/products/8145)を使用。
 
 <img src="img/overview.png" width="600">
 
@@ -35,7 +35,8 @@ GridSwitch
 mmボタン と inchボタン を同時に押しながらUSBケーブルを接続するとコマンドがデフォルト設定に初期化されます。
 
 ## ファームウェアについて
-
+* ファームウェアは Platform IO で作成しました。
+<!--
 * ファームウェアは Arduinoベースで作成しました。
 * Arduino IDEの「ファイル」＞「環境設定」＞「追加のボードマネージャのURL」に下記URLを追加します。
 ```
@@ -64,11 +65,15 @@ https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json
 
 2. ArduinoEigen/Eigen/src/Core/products/GeneralBlockPanelKernel.h の 変数名 D1, D2, D3, D4 を適当に変更<br> (ピン番号のマクロ定数名と競合のため)
 
+-->
+
 ## ファイル一覧
 
-* firm/GridSwitch/
+* src/
     * GridSwitch.ino : ファームウェア本体 (Arduinoスケッチ)
     * \*.h, \*.cpp: ファームウェアで使用する各種クラス宣言と実装
+* lib/
+    * xiaogyan_arduino/ : XIAOGYANライブラリ を Seeed XIAO nRF52840用に修正
 * app/GridSwitch_Config/ 
     * index.html : コマンド設定アプリ (Webアプリ)
     * \*.js, css/\*, lib/\* : コマンド設定アプリで使用する各種ファイル
