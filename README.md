@@ -34,8 +34,8 @@ GridSwitch
 
 mmボタン と inchボタン を同時に押しながらUSBケーブルを接続するとコマンドがデフォルト設定に初期化されます。
 
-## ファームウェアについて
-* ファームウェアは Platform IO で作成しました。
+## ファームウェアの開発環境
+* ファームウェアの開発環境は Platform IO です。(Arduino IDEから移行しました。)
 <!--
 * ファームウェアは Arduinoベースで作成しました。
 * Arduino IDEの「ファイル」＞「環境設定」＞「追加のボードマネージャのURL」に下記URLを追加します。
@@ -69,6 +69,7 @@ https://files.seeedstudio.com/arduino/package_seeeduino_boards_index.json
 
 ## ファイル一覧
 
+* platformio.ini : Platform IO のプロジェクトファイル
 * src/
     * GridSwitch.ino : ファームウェア本体 (Arduinoスケッチ)
     * \*.h, \*.cpp: ファームウェアで使用する各種クラス宣言と実装
